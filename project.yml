@@ -48,35 +48,35 @@
     - name: Set Limits
       command: oc create -f https://raw.githubusercontent.com/jbrannst/ocp-project-ansible/master/limitrange -n {{ item }}
       with_items: 
-        - {{ project_name }}-cicd
-        - {{ project_name }}-test
-        - {{ project_name }}-prod
+        - "{{ project_name }}"-cicd
+        - "{{ project_name }}"-test
+        - "{{ project_name }}"-prod
 
     - name: Add admin access
       command: oc policy add-role-to-user admin {{ admin_user }} -n {{ item }}
       with_items:
-        - {{ project_name }}-cicd
-        - {{ project_name }}-test
-        - {{ project_name }}-prod
+        - "{{ project_name }}"-cicd
+        - "{{ project_name }}"-test
+        - "{{ project_name }}"-prod
 
     - name: Add edit access
       command: oc policy add-role-to-user edit {{ dev_user }} -n {{ item }}
       with_items:
-        - {{ project_name }}-cicd
-        - {{ project_name }}-test
-        - {{ project_name }}-prod
+        - "{{ project_name }}"-cicd
+        - "{{ project_name }}"-test
+        - "{{ project_name }}"-prod
 
     - name: Add access to test and prod projects for Jenkins
       command: oc policy add-role-to-user edit system:serviceaccount:{{ project_name }}-cicd:jenkins -n {{ item }}
       with_items:
-        - {{ project_name }}-test
-        - {{ project_name }}-prod
+        - "{{ project_name }}"-test
+        - "{{ project_name }}"-prod
     
     - name: Add view access to test and prod projects
       command: oc policy add-role-to-user view system:serviceaccount:{{ item }}:default -n {{ item }}
       with_items:
-        - {{ project_name }}-test
-        - {{ project_name }}-prod
+        - "{{ project_name }}"-test
+        - "{{ project_name }}"-prod
 
     - name: Check for Jenkinsfile
       get_url:
