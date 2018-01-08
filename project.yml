@@ -90,13 +90,15 @@
         url: https://raw.githubusercontent.com/jbrannst/ocp-project-ansible/master/templates/jbuildconfig.j2
         dest: jbuildconfig.j2
         mode: 0700
+      changed_when: False
+      failed_when: False
       when: validate_jenkinsfile
       register: fetched_jenkinsfile
 
     - name: Generate Jenkins buildconfig
       template: src=jbuildconfig.j2 dest=/tmp/jbuildconfig.j2
         vars: {{ git_url }}
-      when: fetched_jenkinsfile
+      when: "fetched_jenkinsfile.rc == 0"
       register: generate_template
 
     - name: Create Jenkins server
