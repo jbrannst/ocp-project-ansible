@@ -47,3 +47,14 @@
         - {{ project-name }}-test
         - {{ project-name }}-prod
 
+    - name: Add access to test and prod projects for Jenkins
+      command: oc policy add-role-to-user edit system:serviceaccount:{{ project-name }}-cicd:jenkins -n {{ item }}
+      with_items:
+        - {{ project-name }}-test
+        - {{ project-name }}-prod
+    
+    - name: Add view access to test and prod projects
+      command: oc policy add-role-to-user view system:serviceaccount:{{ item }}:default -n {{ item }}
+      with_items:
+        - {{ project-name }}-test
+        - {{ project-name }}-prod
