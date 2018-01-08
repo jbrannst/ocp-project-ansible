@@ -32,3 +32,13 @@
     - name: Create prod project
       command: oc new-project {{ project-name }}-prod
       when: "validate-prod.rc == 0"
+
+    - name: Set Limits
+      command: oc create -f https://raw.githubusercontent.com/jbrannst/ocp-project-ansible/master/limitrange -n {{ item }}
+      with_items: 
+        - {{ project-name }}-cicd
+        - {{ project-name }}-test
+        - {{ project-name }}-prod
+
+        
+
