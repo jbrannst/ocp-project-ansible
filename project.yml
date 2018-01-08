@@ -75,3 +75,4 @@
 
     - name: Create Jenkins server
       command: 
+      when: "validate-jenkinsfile.rc == 0"
