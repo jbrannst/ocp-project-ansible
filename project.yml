@@ -65,3 +65,13 @@
       with_items:
         - {{ project_name }}-test
         - {{ project_name }}-prod
+
+    - name: Check for Jenkinsfile
+      get_url:
+        url: {{ git_url }}/Jenkinsfile
+        dest: /dev/null
+        mode: 0400
+      register: validate-jenkinsfile
+
+    - name: Create Jenkins server
+      command: 
