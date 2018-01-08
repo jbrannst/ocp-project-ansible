@@ -81,7 +81,7 @@
     - name: Check for Jenkinsfile
       get_url:
         url: {{ git_url }}/Jenkinsfile
-        dest: /dev/null
+        dest: /tmp/Jenkinsfile
         mode: 0400
       register: validate_jenkinsfile
 
