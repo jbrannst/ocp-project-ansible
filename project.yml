@@ -17,27 +17,33 @@
     - name: Validate project cicd
       command: oc get project {{ project_name }}-cicd
       when: "ocp_login.rc == 0"
+      changed_when: False
+      failed_when: False
       register: validate_cicd
 
     - name: Create cicd project
       command: oc new-project {{ project_name }}-cicd
-      when: "validate_cicd.rc == 0"
+      when: "validate_cicd.rc != 0"
 
     - name: Validate project test
       command: oc get project {{ project_name }}-test
+      changed_when: False
+      failed_when: False
       register: validate_test
 
     - name: Create test project
       command: oc new-project {{ project_name }}-test
-      when: "validate_test.rc == 0"
+      when: "validate_test.rc != 0"
 
     - name: Validate project prod
       command: oc get project {{ project_name }}-prod
+      changed_when: False
+      failed_when: False
       register: validate_prod
 
     - name: Create prod project
       command: oc new-project {{ project_name }}-prod
-      when: "validate_prod.rc == 0"
+      when: "validate_prod.rc != 0"
 
     - name: Set Limits
       command: oc create -f https://raw.githubusercontent.com/jbrannst/ocp-project-ansible/master/limitrange -n {{ item }}
