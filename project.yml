@@ -9,8 +9,10 @@
       register: ocp_login
 
     - name: Validate project cicd
-      command: oc project {{ project_name }}-cicd
+      command: oc get project {{ project_name }}-cicd
       when: "ocp_login.rc == 0"
+      changed_when: False
+      failed_when: False
       register: validate-cicd
 
     - name: Create cicd project
@@ -18,7 +20,9 @@
       when: "validate-cicd.rc == 0"
 
     - name: Validate project test
-      command: oc project {{ project_name }}-test
+      command: oc get project {{ project_name }}-test
+      changed_when: False
+      failed_when: False
       register: validate-test
 
     - name: Create test project
@@ -26,7 +30,9 @@
       when: "validate-test.rc == 0"
 
     - name: Validate project prod
-      command: oc project {{ project_name }}-prod
+      command: oc get project {{ project_name }}-prod
+      changed_when: False
+      failed_when: False
       register: validate-prod
 
     - name: Create prod project
