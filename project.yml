@@ -40,5 +40,10 @@
         - {{ project-name }}-test
         - {{ project-name }}-prod
 
-        
+    - name: Add admin access
+      command: oc policy add-role-to-user admin {{ admin_user }} -n {{ item }}
+      with_items:
+        - {{ project-name }}-cicd
+        - {{ project-name }}-test
+        - {{ project-name }}-prod
 
