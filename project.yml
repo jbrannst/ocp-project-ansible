@@ -47,6 +47,13 @@
         - {{ project_name }}-test
         - {{ project_name }}-prod
 
+    - name: Add edit access
+      command: oc policy add-role-to-user edit {{ dev_user }} -n {{ item }}
+      with_items:
+        - {{ project_name }}-cicd
+        - {{ project_name }}-test
+        - {{ project_name }}-prod
+
     - name: Add access to test and prod projects for Jenkins
       command: oc policy add-role-to-user edit system:serviceaccount:{{ project_name }}-cicd:jenkins -n {{ item }}
       with_items:
