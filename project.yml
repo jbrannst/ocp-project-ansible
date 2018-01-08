@@ -1,6 +1,12 @@
 - name: Create OCP resources for development team
   hosts: all
   vars:
+    ocp_server: "https://ocp_server:8443"
+    token: ""
+    git_url: "https://github.com/mglantz/openshift-demos"
+    admin_user: "admin"
+    dev_user: "devuser"
+
     cicd_template: "https://raw.githubusercontent.com/mglantz/openshift-demos/master/source/blue-green/template.json"
     
   tasks:
