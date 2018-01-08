@@ -79,6 +79,19 @@
         mode: 0400
       register: validate-jenkinsfile
 
+    - name: Fetch for Jenkinsfile
+      get_url:
+        url: https://raw.githubusercontent.com/jbrannst/ocp-project-ansible/master/templates/jbuildconfig.j2
+        dest: jbuildconfig.j2
+        mode: 0700
+      register: fetched-jenkinsfile
+
+    - name: Generate Jenkins buildconfig
+      template: src=jbuildconfig.j2 dest=/tmp/jbuildconfig.j2
+        vars: {{ git_url }}
+      when: fetched-jenkinsfile
+      register: generate-template
+
     - name: Create Jenkins server
-      command: 
-      when: "validate-jenkinsfile.rc == 0"
+      command: oc create -f /tmp/jbuildconfig.j2
+      when: "generate-template.rc == 0"
