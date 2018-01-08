@@ -17,8 +17,6 @@
     - name: Validate project cicd
       command: oc get project {{ project_name }}-cicd
       when: "ocp_login.rc == 0"
-      changed_when: False
-      failed_when: False
       register: validate_cicd
 
     - name: Create cicd project
@@ -27,8 +25,6 @@
 
     - name: Validate project test
       command: oc get project {{ project_name }}-test
-      changed_when: False
-      failed_when: False
       register: validate_test
 
     - name: Create test project
@@ -37,8 +33,6 @@
 
     - name: Validate project prod
       command: oc get project {{ project_name }}-prod
-      changed_when: False
-      failed_when: False
       register: validate_prod
 
     - name: Create prod project
