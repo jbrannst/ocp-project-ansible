@@ -1,0 +1,34 @@
+- name: Create OCP resources for development team
+  hosts: all
+  vars:
+    cicd_template: "https://raw.githubusercontent.com/mglantz/openshift-demos/master/source/blue-green/template.json"
+    
+  tasks:
+    - name: Login to cluster
+      command: oc login --insecure-skip-tls-verify --token={{ token }} {{ ocp_server }}
+      register: ocp_login
+
+    - name: Validate project cicd
+      command: oc project {{ project-name }}-cicd
+      when: "ocp_login.rc == 0"
+      register: validate-cicd
+
+    - name: Create cicd project
+      command: oc new-project {{ project-name }}-cicd
+      when: "validate-cicd.rc == 0"
+
+    - name: Validate project test
+      command: oc project {{ project-name }}-test
+      register: validate-test
+
+    - name: Create test project
+      command: oc new-project {{ project-name }}-test
+      when: "validate-test.rc == 0"
+
+    - name: Validate project prod
+      command: oc project {{ project-name }}-prod
+      register: validate-prod
+
+    - name: Create prod project
+      command: oc new-project {{ project-name }}-prod
+      when: "validate-prod.rc == 0"
