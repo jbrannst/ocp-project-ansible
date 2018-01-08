@@ -83,6 +83,8 @@
         url: {{ git_url }}/Jenkinsfile
         dest: /tmp/Jenkinsfile
         mode: 0400
+      changed_when: False
+      failed_when: False
       register: validate_jenkinsfile
 
     - name: Fetch for Jenkinsfile
@@ -92,7 +94,7 @@
         mode: 0700
       changed_when: False
       failed_when: False
-      when: validate_jenkinsfile
+      when: "validate_jenkinsfile.rc == 0"
       register: fetched_jenkinsfile
 
     - name: Generate Jenkins buildconfig
