@@ -79,11 +79,13 @@
         - "{{ project_name }}-test"
         - "{{ project_name }}-prod"
 
-    - name: Check for Jenkinsfile
+   - name: Check for Jenkinsfile
       get_url:
-        url: "{{ git_url }}/Jenkinsfile"
+        url: {{ git_url }}/Jenkinsfile
         dest: /tmp/Jenkinsfile
         mode: 0400
+      changed_when: False
+      failed_when: False
       register: validate_jenkinsfile
 
     - name: Fetch for Jenkinsfile
@@ -91,18 +93,18 @@
         url: https://raw.githubusercontent.com/jbrannst/ocp-project-ansible/master/templates/jbuildconfig.j2
         dest: jbuildconfig.j2
         mode: 0700
+      changed_when: False
+      failed_when: False
       when: "validate_jenkinsfile.rc == 0"
       register: fetched_jenkinsfile
 
     - name: Generate Jenkins buildconfig
-      template: 
-        src: jbuildconfig.j2
-        dest: /tmp/jbuildconfig.j2
-        vars: 
-          git_url: "{{ git_url }}"
-      when: "fetched_jenkinsfile.rc == 0"
+      template: src=jbuildconfig.j2 dest=/tmp/jbuildconfig.j2
+        vars: {{ git_url }}
+      when: (validate_jenkinsfile.rc == 0 and fetched_jenkinsfile.rc == 0)
       register: generate_template
 
     - name: Create Jenkins server
       command: oc apply -f /tmp/jbuildconfig.j2
-      when: "generate_template.rc == 0"
+      when: (validate_jenkinsfile.rc == 0 and generate_template.rc == 0)
+
